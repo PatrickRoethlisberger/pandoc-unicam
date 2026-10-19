@@ -1,0 +1,73 @@
+$-- Title page. Students are listed on the left, advisors and co-advisors on the right.
+{%
+\thispagestyle{empty}
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{0mm}
+\begin{center}
+$if(logo)$
+  \includegraphics[width=15mm]{$logo$}\par%
+  \vspace{0.15cm}%
+$endif$
+$if(university)$
+  {\rmfamily \Large \bfseries $university$ \par}%
+$endif$
+  \vspace{0.15cm}%
+  \hrule%
+  \vspace{0.15cm}%
+$if(school)$
+  {\rmfamily \Large \scshape $school$ \par}%
+  \vspace{0.15cm}%
+$endif$
+$if(degree)$
+  {\rmfamily \large $degree$ \par}%
+$endif$
+  \vspace*{\stretch{7}}%
+  {\rmfamily \LARGE \bfseries $title$ \par}%
+$if(subtitle)$
+  \vspace{0.3cm}%
+  {\rmfamily \Large $subtitle$ \par}%
+$endif$
+  \vspace*{\stretch{7}}%
+\end{center}
+\noindent
+\begin{minipage}[t]{0.5\textwidth}
+  \raggedright
+  $if(author/rest)$$students-label$$else$$student-label$$endif$\par
+$for(author)$
+  {\bfseries \large $if(author.name)$$author.name$$else$$author$$endif$ \par}%
+$if(author.id)$
+  \vspace{0.45cm}%
+  {\bfseries \small $student-id-label$ $author.id$ \par}%
+$endif$
+$if(author/rest)$
+  \vspace{0.2cm}%
+$endif$
+$endfor$
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.5\textwidth}
+  \raggedleft
+$if(advisor)$
+  $if(advisor/rest)$$advisors-label$$else$$advisor-label$$endif$\par
+$for(advisor)$
+  {\bfseries \large $advisor$ \par}%
+$endfor$
+$endif$
+$if(coadvisor)$
+  \vspace{1.2cm}%
+  $if(coadvisor/rest)$$coadvisors-label$$else$$coadvisor-label$$endif$\par
+$for(coadvisor)$
+  {\bfseries \large $coadvisor$ \par}%
+$endfor$
+$endif$
+\end{minipage}
+\begin{center}
+  \vspace*{\stretch{7}}%
+  \hrule%
+  \vspace{0.15cm}%
+$if(academic-year)$
+  {\large $academic-year-label$ $academic-year$}%
+$endif$
+\end{center}
+\newpage
+}

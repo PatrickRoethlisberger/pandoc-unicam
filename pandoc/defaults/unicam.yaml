@@ -1,0 +1,25 @@
+# Use from a manuscript directory:
+#   pandoc --data-dir=/path/to/pandoc -d unicam thesis.md -o thesis.pdf
+from: markdown
+to: latex
+template: unicam-thesis.latex
+pdf-engine: latexmk
+pdf-engine-opts:
+  - -pdflatex=pdflatex
+top-level-division: chapter
+number-sections: true
+standalone: true
+resource-path:
+  - .
+  - images
+# Order matters: defaults first, then cross-references (before citeproc, so that
+# @fig:x is not taken for a citation), then citations, then the table/index patches.
+filters:
+  - unicam-meta.lua
+  - unicam-drawio.lua
+  - unicam-structure.lua
+  - unicam-code.lua
+  - pandoc-crossref
+  - citeproc
+  - unicam-tables.lua
+  - unicam-index.lua
