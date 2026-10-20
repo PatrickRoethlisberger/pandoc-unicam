@@ -17,12 +17,14 @@ The `pandoc/` directory is a Pandoc data directory. Run Pandoc from the folder o
 pandoc --data-dir=/path/to/pandoc-unicam/pandoc -d unicam thesis.md -o thesis.pdf
 ```
 
-To drop the `--data-dir` flag, link the directory into Pandoc's user data directory (`pandoc --version` shows where that is, usually `~/.local/share/pandoc`):
+To drop the `--data-dir` flag, run `./setup.sh` once. It finds Pandoc's user data directory (`pandoc --version` shows where it is, usually `~/.local/share/pandoc`), creates it if missing and links the kit into it:
 
 ```sh
-ln -s /path/to/pandoc-unicam/pandoc ~/.local/share/pandoc
+./setup.sh
 pandoc -d unicam thesis.md -o thesis.pdf
 ```
+
+The script is safe to repeat. It needs a real data directory, so if you earlier symlinked the whole `pandoc/` folder to `~/.local/share/pandoc`, remove that link first. Pandoc has one data directory only; the kit's files are namespaced (`unicam`, `unicam-*`) so that other templates can be linked beside them. To uninstall, delete the links whose names start with `unicam`.
 
 To see everything working, run `make example`; it builds `example/thesis.md` into `build/thesis.pdf`. Copy that example as the starting point for your thesis: its YAML header lists every option, and its body shows each feature below.
 
@@ -85,12 +87,15 @@ The kit is English by default. For another language set `lang` and also the cros
 ## Layout of this repository
 
 ```
-pandoc/
-  defaults/unicam.yaml     Pandoc defaults file (-d unicam)
-  templates/               LaTeX template and partials
-  filters/                 Lua filters
-  csl/apa.csl              citation style
-  assets/stemma.png        default logo
+pandoc/                    Pandoc data directory
+  defaults/unicam.yaml          defaults file (-d unicam)
+  filters/unicam/               Lua filters
+  csl/unicam/apa.csl            citation style
+  assets/unicam/stemma.png      default logo
+  templates/unicam-*.latex      LaTeX template and partials
 example/                   sample thesis
+setup.sh                   links the kit into Pandoc's user data directory
 Makefile                   `make example`, `make clean`
 ```
+
+Pandoc looks for each kind of file in a fixed folder of the data directory, which is why the kit is spread over several folders. Templates must sit directly in `templates/`; the other folders hold a `unicam/` subfolder.
