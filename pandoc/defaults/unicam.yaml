@@ -15,11 +15,11 @@ resource-path:
 # Order matters: defaults first, then cross-references (before citeproc, so that
 # @fig:x is not taken for a citation), then citations, then the table/index patches.
 filters:
-  - unicam-meta.lua
-  - unicam-drawio.lua
-  - unicam-structure.lua
-  - unicam-code.lua
+  - unicam/unicam-meta.lua
+  - unicam/unicam-drawio.lua
+  - unicam/unicam-structure.lua
+  - unicam/unicam-code.lua
   - pandoc-crossref
   - citeproc
-  - unicam-tables.lua
-  - unicam-index.lua
+  - unicam/unicam-tables.lua
+  - unicam/unicam-index.lua

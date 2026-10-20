@@ -1,4 +1,4 @@
-$passoptions.latex()$
+$unicam-passoptions.latex()$
 \documentclass[
 $for(babel-otherlangs)$
   $babel-otherlangs$,
@@ -22,15 +22,15 @@ $if(geometry)$
 $endif$
 \usepackage{amsmath,amssymb}
 \setcounter{secnumdepth}{$if(numbersections)$$if(secnumdepth)$$secnumdepth$$else$2$endif$$else$-\maxdimen$endif$}
-$fonts.latex()$
-$font-settings.latex()$
+$unicam-fonts.latex()$
+$unicam-font-settings.latex()$
 $unicam-common.latex()$
 $unicam-style.latex()$
 $for(header-includes)$
 $header-includes$
 $endfor$
-$after-header-includes.latex()$
-$hypersetup.latex()$
+$unicam-after-header-includes.latex()$
+$unicam-hypersetup.latex()$
 $unicam-style-late.latex()$
 
 $if(title)$

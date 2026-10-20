@@ -3,7 +3,7 @@
 -- defaults file override the manuscript's metadata instead of yielding to it.
 
 local script_dir = (PANDOC_SCRIPT_FILE or ''):match('^(.*)[/\\][^/\\]*$') or '.'
-local default_logo = pandoc.path.normalize(script_dir .. '/../assets/stemma.png')
+local default_logo = pandoc.path.normalize(script_dir .. '/../../assets/unicam/stemma.png')
 
 local defaults = {
   -- document class and page layout of the reference template
@@ -39,7 +39,7 @@ local defaults = {
   citecolor = 'green',
   urlcolor = 'magenta',
   -- bibliography
-  csl = 'apa.csl',
+  csl = 'unicam/apa.csl',
   ['link-citations'] = true,
   ['reference-section-title'] = 'Bibliography',
   -- cross-references (pandoc-crossref)
