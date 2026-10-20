@@ -4,20 +4,29 @@ on:
   pull_request:
 
 jobs:
-  example:
+  examples:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - example: minimal
+            input: thesis.md
+          - example: full
+            input: 00-meta.md chapters/*.md
     steps:
       - uses: actions/checkout@v7
       - uses: PatrickRoethlisberger/pandoc-actions/drawio@v1
         with:
-          working-directory: example
+          working-directory: examples/${{ matrix.example }}
       - uses: PatrickRoethlisberger/pandoc-actions/build@v1
         with:
           template: PatrickRoethlisberger/pandoc-unicam@${{ github.sha }}
           defaults: unicam
-          working-directory: example
-      - run: test -s example/thesis.pdf
+          working-directory: examples/${{ matrix.example }}
+          input: ${{ matrix.input }}
+          output: ${{ matrix.example }}.pdf
+      - run: test -s examples/${{ matrix.example }}/${{ matrix.example }}.pdf
       - uses: actions/upload-artifact@v7
         with:
           archive: false
-          path: example/thesis.pdf
+          path: examples/${{ matrix.example }}/${{ matrix.example }}.pdf

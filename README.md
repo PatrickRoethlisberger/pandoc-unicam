@@ -26,7 +26,18 @@ pandoc -d unicam thesis.md -o thesis.pdf
 
 The script is safe to repeat. It needs a real data directory, so if you earlier symlinked the whole `pandoc/` folder to `~/.local/share/pandoc`, remove that link first. Pandoc has one data directory only; the kit's files are namespaced (`unicam`, `unicam-*`) so that other templates can be linked beside them. To uninstall, delete the links whose names start with `unicam`.
 
-To see everything working, run `make example`; it builds `example/thesis.md` into `build/thesis.pdf`. Copy that example as the starting point for your thesis: its YAML header lists every option, and its body shows each feature below.
+There are two examples. `examples/minimal/` is the smallest manuscript the template accepts. `examples/full/` is split into one file per chapter: the YAML header of `00-meta.md` lists every option, and the chapters show each feature below. Run `make examples` to build them into `build/minimal.pdf` and `build/full.pdf`, and copy the one that suits you as the starting point for your thesis.
+
+### Splitting the manuscript into several files
+
+Pandoc joins the files you list, in that order, so each chapter can live in its own file. Put the YAML header in the first file and start every other file with a `#` heading. Numbering the files keeps the order obvious and lets a glob pick them up:
+
+```sh
+cd examples/full
+pandoc --data-dir=../../pandoc -d unicam 00-meta.md chapters/*.md -o full.pdf
+```
+
+Chapter references and citations work across files. Image and diagram paths are relative to the folder Pandoc runs in, not to the chapter file. `examples/full/` is built this way. In CI, pass the same list as the action's `input` (see below).
 
 ## GitHub Actions
 
@@ -45,7 +56,7 @@ The build runs in CI with the shared [pandoc-actions](https://github.com/Patrick
     path: thesis.pdf
 ```
 
-`input`, `output`, `working-directory` and `args` are described in the actions' README, together with how to export diagrams only when one changes. The `drawio` action writes the PDFs the draw.io filter expects (`name.pdf`, `name-page2.pdf`, …); without it the build prints a harmless "CLI not found; using the existing PDF" warning per diagram and needs those PDFs to be committed.
+For a split manuscript set `input: 00-meta.md chapters/*.md` (several files, space-separated or as a glob). `input`, `output`, `working-directory` and `args` are described in the actions' README, together with how to export diagrams only when one changes. The `drawio` action writes the PDFs the draw.io filter expects (`name.pdf`, `name-page2.pdf`, …); without it the build prints a harmless "CLI not found; using the existing PDF" warning per diagram and needs those PDFs to be committed.
 
 ## Metadata
 
@@ -98,7 +109,7 @@ The kit is English by default. For another language set `lang` and also the cros
 
 ## Things to know
 
-- The default engine is `pdflatex`, so text and code blocks are limited to what its Unicode support covers (no Greek, arrows or emoji). For full Unicode add `--pdf-engine-opt=-pdflatex=lualatex` (or `xelatex`) to the command; both build the example, but the output has not been compared visually with the `pdflatex` one.
+- The default engine is `pdflatex`, so text and code blocks are limited to what its Unicode support covers (no Greek, arrows or emoji). For full Unicode add `--pdf-engine-opt=-pdflatex=lualatex` (or `xelatex`) to the command; both build the full example, but the output has not been compared visually with the `pdflatex` one.
 - Pipe tables with any source line over 72 characters get full-width, wrapped columns (Pandoc's rule). Keep lines short for natural-width tables.
 - Grid tables are produced by patching Pandoc's generated LaTeX (`pandoc/filters/unicam-tables.lua`). If a table cannot be patched, a warning is printed and Pandoc's own style is kept. Hard line breaks and spanning cells inside table cells are not supported.
 - The bibliography and the index appear in the contents; citation links are green and URL links magenta, as in the original template (override with `citecolor` and `urlcolor`).
@@ -112,9 +123,10 @@ pandoc/                    Pandoc data directory
   csl/unicam/apa.csl            citation style
   assets/unicam/stemma.png      default logo
   templates/unicam-*.latex      LaTeX template and partials
-example/                   sample thesis
+examples/minimal/          smallest possible manuscript, one file
+examples/full/             every feature, split into one file per chapter
 setup.sh                   links the kit into Pandoc's user data directory
-Makefile                   `make example`, `make clean`
+Makefile                   `make examples`, `make clean`
 ```
 
 Pandoc looks for each kind of file in a fixed folder of the data directory, which is why the kit is spread over several folders. Templates must sit directly in `templates/`; the other folders hold a `unicam/` subfolder.

@@ -1,12 +1,16 @@
 PANDOC := pandoc --data-dir=$(CURDIR)/pandoc -d unicam
 KIT := $(shell find pandoc -type f)
 
-.PHONY: example clean
-example: build/thesis.pdf
+.PHONY: examples clean
+examples: build/minimal.pdf build/full.pdf
 
-build/thesis.pdf: example/thesis.md example/bibliography.bib $(KIT)
+build/minimal.pdf: $(wildcard examples/minimal/*) $(KIT)
 	mkdir -p build
-	cd example && $(PANDOC) thesis.md -o ../$@
+	cd examples/minimal && $(PANDOC) thesis.md -o ../../$@
+
+build/full.pdf: $(shell find examples/full -type f) $(KIT)
+	mkdir -p build
+	cd examples/full && $(PANDOC) 00-meta.md chapters/*.md -o ../../$@
 
 clean:
 	rm -rf build
