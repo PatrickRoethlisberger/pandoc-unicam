@@ -102,7 +102,7 @@ local function render(src, page)
     fail('diagram not found: ' .. src)
   end
   local base = src:gsub('%.[^./\\]+$', '')
-  local suffix = page and ('-page' .. page) or ''
+  local suffix = (page and page > 1) and ('-page' .. page) or ''
   local target_src = base .. suffix .. '.pdf'
   local target = source:gsub('%.[^./\\]+$', '') .. suffix .. '.pdf'
 
