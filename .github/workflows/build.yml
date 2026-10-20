@@ -1,0 +1,23 @@
+name: Build
+on:
+  push:
+  pull_request:
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: PatrickRoethlisberger/pandoc-actions/drawio@v1
+        with:
+          working-directory: example
+      - uses: PatrickRoethlisberger/pandoc-actions/build@v1
+        with:
+          template: PatrickRoethlisberger/pandoc-unicam@${{ github.sha }}
+          defaults: unicam
+          working-directory: example
+      - run: test -s example/thesis.pdf
+      - uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          path: example/thesis.pdf

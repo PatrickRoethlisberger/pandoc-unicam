@@ -28,6 +28,25 @@ The script is safe to repeat. It needs a real data directory, so if you earlier 
 
 To see everything working, run `make example`; it builds `example/thesis.md` into `build/thesis.pdf`. Copy that example as the starting point for your thesis: its YAML header lists every option, and its body shows each feature below.
 
+## GitHub Actions
+
+The build runs in CI with the shared [pandoc-actions](https://github.com/PatrickRoethlisberger/pandoc-actions). This repository is only the template: the action fetches it by tag, so `@v1` builds with the kit as tagged `v1`.
+
+```yaml
+- uses: actions/checkout@v7
+- uses: PatrickRoethlisberger/pandoc-actions/drawio@v1   # only if you use draw.io diagrams
+- uses: PatrickRoethlisberger/pandoc-actions/build@v1
+  with:
+    template: PatrickRoethlisberger/pandoc-unicam@v1
+    defaults: unicam
+- uses: actions/upload-artifact@v7
+  with:
+    archive: false
+    path: thesis.pdf
+```
+
+`input`, `output`, `working-directory` and `args` are described in the actions' README, together with how to export diagrams only when one changes. The `drawio` action writes the PDFs the draw.io filter expects (`name.pdf`, `name-page2.pdf`, …); without it the build prints a harmless "CLI not found; using the existing PDF" warning per diagram and needs those PDFs to be committed.
+
 ## Metadata
 
 Required: `title`, `author`, `advisor`, `academic-year`.
@@ -71,7 +90,7 @@ Title page labels can be overridden: `student-label`, `students-label`, `advisor
 
 ### draw.io diagrams
 
-A `.drawio` image is exported to a cropped PDF beside the source (same name, `.pdf`) on every build, then used like any other figure. `{page=2}` picks a page and writes `name-page2.pdf`. If draw.io is missing or the export fails, the existing PDF beside the diagram is used with a warning; with no such PDF the build stops. Commit the exported PDFs if you build on a machine without draw.io.
+A `.drawio` image is exported to a cropped PDF beside the source (same name, `.pdf`) on every build, then used like any other figure. `{page=2}` picks another page (page 1 is the default) and writes `name-page2.pdf`. If draw.io is missing or the export fails, the existing PDF beside the diagram is used with a warning; with no such PDF the build stops. Commit the exported PDFs if you build on a machine without draw.io.
 
 ### Other languages
 
